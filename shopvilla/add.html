@@ -1,0 +1,178 @@
+<html>
+<head>
+  <style type="text/css">
+    input[type=text], select {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+
+}
+
+
+input[type=number], select {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  </style>
+
+</head>
+
+<body>   
+  <?php
+    
+       $servername = "localhost";
+    $username = "rudraksh";
+    $password = "rh6698";
+    $databasename="try";
+
+       
+
+     $conn = mysqli_connect($servername, $username, $password,$databasename);
+
+     if($_SERVER['REQUEST_METHOD']=='POST')
+     {
+      
+        $firstname=$conn->real_escape_string($_POST['firstname']);
+        $usernamelast=$conn->real_escape_string($_POST['Name']);
+        $email=$conn->real_escape_string($_POST['Email']);
+        $password=$conn->real_escape_string($_POST['Password']);
+        $conpass=$conn->real_escape_string($_POST['Conform']);
+        $gender=$conn->real_escape_string($_POST['gender']);
+        $enroll=$_POST['enrollment'];
+
+
+
+
+$target_dir = "uploads/";
+$target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+$uploadOk = 1;
+$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+// Check if image file is a actual image or fake image
+if(isset($_POST["submit"])) {
+    $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
+    if($check !== false) {
+        echo "File is an image - " . $check["mime"] . ".";
+        $uploadOk = 1;
+    } else {
+        echo "File is not an image.";
+        $uploadOk = 0;
+    }
+}
+// Check if file already exists
+if (file_exists($target_file)) {
+    echo "Sorry, file already exists.";
+    $uploadOk = 0;
+}
+// Check file size
+
+// Check if $uploadOk is set to 0 by an error
+if ($uploadOk == 0) {
+    echo "Sorry, your file was not uploaded.";
+// if everything is ok, try to upload file
+} else {
+    if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+        echo "The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.";
+    } else {
+        echo "Sorry, there was an error uploading your file.";
+    }
+}
+
+ $profile=$_FILES["fileToUpload"]["name"];
+          
+
+      if($_POST['Password'] == $_POST['Conform'])
+      {   
+
+          $sql = "INSERT INTO `user` (`Enrollment`,`First Name`, `Last Name`, `Email`,`password`,`gender`,`photo`) VALUES
+                ('$enroll','$firstname', '$usernamelast', '$email','$password','$gender','$profile')";
+
+               if($conn->query($sql)===True)
+               {
+                echo "New record created ";
+               }
+               else
+               {
+                 echo "Error: " . $sql . "<br>" . $conn->error;
+               }
+            }
+
+            else
+            {
+              ?>
+              <script type="text/javascript">alert("password not match");</script>
+              <?php
+              
+            }
+
+      
+     }
+  ?>
+    <form id="form1" runat="server">  
+    <div>                
+    </div>   
+    <h2 align="center"> Product Details:</h2>  
+    <table id="table1"; cellspacing="5px" cellpadding="5%"; align="center">  
+       <tr>  
+              <td  align="right" class="style1">Product Title:</td>  
+              <td class="style1"><input type="text" name="Job Title" /></td>  
+       </tr>  
+       <tr>  
+              <td align="right">Description:</td>  
+              <td><textarea rows="3" cols="15" name="Description"></textarea>  
+        <p>Brief Description should have atmost 500 characters</p>  
+        </td>  
+       </tr>  
+       <tr>  
+              <td align="right">Company Name:</td>  
+              <td><input type="text" name="Company Name" /></td>  
+       </tr>  
+       <tr>  
+              <td align="right">Product prize:</td>  
+              <td><input type="text" name="Contact number" /></td>  
+       </tr>  
+       <tr>  
+              <td align="right">Discount:</td>  
+              <td><input type="number" name="Contact person" /></td>  
+       </tr>  
+        <tr>  
+              <td align="right">Quantity:</td>  
+              <td><input type="number" name="Contact person" /></td>  
+       </tr>  
+       <tr>  
+             <div>
+            Select image to upload:
+              <input type="file" name="fileToUpload" id="fileToUpload">
+     </div>
+       </tr>  
+       </tr>  
+      
+       <tr>  
+       <td align="right">Catagory</td>  
+         <td><input type="checkbox" name="vehicle" value="Bike" />Electronic
+        <input type="checkbox" name="vehicle" value="Bike" /> Footware
+        <input type="checkbox" name="vehicle" value="Bike" />Cloths
+        <input type="checkbox" name="vehicle" value="Bike" />Books
+        </td>  
+       </tr>  
+      
+      
+           
+        </td>  
+        </tr>         
+        <tr>  
+        <td> <input type="button" value="Submit" align="right"/>  
+        <td> <input type="button" value="Reset" />         
+        </td>  
+        </tr>  
+</table>   
+    </form>  
+</body>  
+</html>
